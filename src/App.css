@@ -1,0 +1,12 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+body{
+  font-family: sans-serif;
+  color: #333;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
