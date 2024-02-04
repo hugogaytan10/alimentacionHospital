@@ -9,19 +9,19 @@ export const Login = () => {
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('https://bechatpdf-production.up.railway.app/api/usuario/login', {
+        fetch('http://localhost:8090/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ User: usuario, Contrasenia: contrasena })
+            body: JSON.stringify({ User: usuario, Contrasena: contrasena })
         })
             .then(res => res.json())
             .then(data => {
                 if (data.Tipo != null) {
                     contexto.setUsuario(data);
                     setTimeout(() => {
-                        navigate('/chat');
+                        navigate('/listado');
                     }, 1000)
                 }
             }).catch(err => {

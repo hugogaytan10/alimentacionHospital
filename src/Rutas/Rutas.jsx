@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 import { AppContext } from "../Contexto/AppContext";
 import { Table } from "../Table/Table";
 import { TableAdmin } from "../TableAdmin/TableAdmin";
+import { Login } from "../Login/Login";
 
 export const Rutas = () => {
   const contexto = useContext(AppContext);
@@ -12,15 +13,15 @@ export const Rutas = () => {
       <BrowserRouter>
         {contexto.usuario.Tipo == 1 && (
           <nav className="h-10 ">
-            <ul className="h-full w-full flex items-center justify-around bg-white">
+            <ul className="h-full w-full flex items-center justify-end gap-1 bg-white">
               <NavLink
-                className="font-bold text-gray-50 w-1/2 text-center bg-gray-500"
+                className="font-bold text-gray-50 w-20 text-center bg-blue-800 rounded-md"
                 to="/listado"
               >
                 LISTADO
               </NavLink>
               <NavLink
-                className="font-bold text-gray-50 w-1/2 text-center bg-gray-500"
+                className="font-bold text-gray-50 w-20 text-center bg-blue-800 rounded-md"
                 to="/admin"
               >
                 ABD
@@ -30,6 +31,7 @@ export const Rutas = () => {
         )}
         <div className="h-5/6">
             <Routes>
+                <Route path="/" element={<Login />} />
                 <Route path="/listado" element={<Table />} />
                 <Route path="/admin" element={<TableAdmin />} />
             </Routes>
