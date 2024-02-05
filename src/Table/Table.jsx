@@ -18,6 +18,8 @@ pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
 export const Table = () => {
   const [data, setData] = useState([]);
+  const [persona, setPersona] = useState({});
+  const [alimento, setAlimento] = useState({});
   const contexto = useContext(AppContext);
   const TablaMes = (mes) => {
     fetch(`http://localhost:8090/api/tabla/${mes}`, {
@@ -61,6 +63,41 @@ export const Table = () => {
         setData(data);
       });
   };
+
+  const BuscarRUT = (rut) => {
+    fetch(`http://localhost:8090/api/persona/${rut}`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: contexto.usuario.Token,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setPersona(data);
+        console.log(data);
+        document.getElementById("InsertarAlimento").showModal();
+      });
+  };
+
+  const InsertarAlimento = (alimento) => {
+    fetch("http://localhost:8090/api/alimento", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: contexto.usuario.Token,
+      },
+      body: JSON.stringify(alimento),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAlimento(data);
+        console.log(data);
+      });
+  };
+
   useEffect(() => {
     fetch("http://localhost:8090/api/tabla", {
       method: "GET",
@@ -103,6 +140,16 @@ export const Table = () => {
 
   return (
     <div className="w-3/4 m-auto ">
+      <div className="w-full flex justify-end">
+        <button
+          onClick={() => {
+            document.getElementById("BuscarRUT").showModal();
+          }}
+          className="btn bg-blue-700 text-gray-50"
+        >
+          INSERTAR
+        </button>
+      </div>
       <div className="flex flex-wrap w-full justify-around">
         <select
           onChange={(e) => {
@@ -206,6 +253,92 @@ export const Table = () => {
           </div>
         </div>
       </dialog>
+
+      <dialog id="BuscarRUT" className="modal">
+        <div className="modal-box bg-white">
+          <h3 className="font-bold text-lg">BUSCAR PERSONA POR RUT</h3>
+          <div className="modal-action block">
+            <form
+              method="dialog w-full"
+              onSubmit={(e) => {
+                e.preventDefault();
+                BuscarRUT(e.target.rut.value);
+                document.getElementById("BuscarRUT").close();
+              }}
+            >
+              <input
+                type={"text"}
+                placeholder={"RUT"}
+                name={"rut"}
+                id={"rut"}
+                className="google-input"
+              />
+              <button className="btn">Buscar</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="InsertarAlimento" className="modal">
+        <div className="modal-box bg-white">
+          <h3 className="font-bold text-lg">INSERTAR ALIMENTO</h3>
+          <div className="modal-action block">
+            <form
+              method="dialog w-full"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const alimento = {
+                  Persona_RUT: e.target.rut.value,
+                  Alimentacion: e.target.alimentacion.value,
+                  Usuario_Id: contexto.usuario.Id,
+                };
+                InsertarAlimento(alimento);
+                document.getElementById("InsertarAlimento").close();
+                
+              }}
+            >
+              <label className="label">
+                <span className="label-text">Nombre</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Nombre"
+                name="nombre"
+                id="nombre"
+                className="google-input"
+                value={persona.Nombre}
+                readOnly
+              />
+              <label className="label">
+                <span className="label-text">RUT</span>
+              </label>
+              <input
+                type="text"
+                placeholder="RUT"
+                name="rut"
+                id="rut"
+                className="google-input"
+                value={persona.RUT}
+                readOnly
+              />
+              <label className="label">
+                <span className="label-text">Alimentación</span>
+              </label>
+              <select
+                name="alimentacion"
+                id="alimentacion"
+                className="select select-info w-full max-w-xs bg-white"
+              >
+                <option value="DESAYUNO">DESAYUNO</option>
+                <option value="ALMUERZO">ALMUERZO</option>
+                <option value="CENA">CENA</option>
+              </select>
+              <button className="btn">Insertar</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
     </div>
   );
 };

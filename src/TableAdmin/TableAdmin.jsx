@@ -80,7 +80,7 @@ export const TableAdmin = () => {
       });
   };
   const GuardarPersona = (persona) => {
-   
+
     fetch(`http://localhost:8090/api/persona`, {
       method: "POST",
       mode: "cors",
@@ -168,37 +168,37 @@ export const TableAdmin = () => {
         </thead>
         <tbody>
           {
-          data.length > 0 &&
-          data.map((item, index) => (
-            <tr key={`renglon-${item.RUT}`}>
-              <td>{item.RUT}</td>
-              <td>{item.Nombre}</td>
-              <td>{item.Unidad}</td>
-              <td>{item.Ley}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    traerDatos(item.RUT);
-                    document.getElementById("my_modal_1").showModal();
-                  }}
-                  className="btn bg-blue-700 text-gray-50"
-                >
-                  EDITAR
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => {
-                    traerDatos(item.RUT);
-                    document.getElementById("my_modal_2").showModal();
-                  }}
-                  className="btn bg-red-500 text-gray-50"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
+            data.length > 0 &&
+            data.map((item, index) => (
+              <tr key={`renglon-${item.RUT}`}>
+                <td>{item.RUT}</td>
+                <td>{item.Nombre}</td>
+                <td>{item.Unidad}</td>
+                <td>{item.Ley}</td>
+                <td>
+                  <button
+                    onClick={() => {
+                      traerDatos(item.RUT);
+                      document.getElementById("my_modal_1").showModal();
+                    }}
+                    className="btn bg-blue-700 text-gray-50"
+                  >
+                    EDITAR
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      traerDatos(item.RUT);
+                      document.getElementById("my_modal_2").showModal();
+                    }}
+                    className="btn bg-red-500 text-gray-50"
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
