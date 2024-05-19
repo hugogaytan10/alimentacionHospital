@@ -20,7 +20,7 @@ export const TableAdmin = () => {
   const [unidades, setUnidades] = useState([]);
   const [persona, setPersona] = useState({});
   const contexto = useContext(AppContext);
-  const traerDatos = (id) => {
+  const traerDatos = async (id) => {
     fetch(`http://localhost:8090/api/persona/${id}`, {
       method: "GET",
       mode: "cors",
@@ -34,7 +34,7 @@ export const TableAdmin = () => {
         setPersona(data);
       });
   };
-  const TraerUnidades = () => {
+  const TraerUnidades = async () => {
     fetch(`http://localhost:8090/api/unidad`, {
       method: "GET",
       mode: "cors",
@@ -48,7 +48,7 @@ export const TableAdmin = () => {
         setUnidades(data);
       });
   };
-  const ActualizarPersona = (persona) => {
+  const ActualizarPersona = async (persona) => {
     fetch(`http://localhost:8090/api/persona/${persona.RUT}`, {
       method: "PUT",
       mode: "cors",
@@ -64,8 +64,29 @@ export const TableAdmin = () => {
         document.getElementById("my_modal_1").close();
       });
   };
-
-  const EliminarPersona = (id) => {
+  const ReactivarPersona = async (persona) => {
+    const actualizarPersona = {
+      Estado: 1,
+      Nombre: persona.Nombre,
+      RUT: persona.RUT,
+      Unidad_Id: persona.Unidad_Id,
+      Ley: persona.Ley,
+    };
+    fetch(`http://localhost:8090/api/persona/${persona.RUT}`, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: contexto.usuario.Token,
+      },
+      body: JSON.stringify(actualizarPersona),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("my_modal_1").close();
+      });
+  };
+  const EliminarPersona = async (id) => {
     fetch(`http://localhost:8090/api/persona/eliminar/${id}`, {
       method: "PUT",
       mode: "cors",
@@ -76,11 +97,10 @@ export const TableAdmin = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        document.getElementById("my_modal_2").close();
       });
   };
-  const GuardarPersona = (persona) => {
-
+  const GuardarPersona = async (persona) => {
     fetch(`http://localhost:8090/api/persona`, {
       method: "POST",
       mode: "cors",
@@ -92,6 +112,7 @@ export const TableAdmin = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         //refrescar la tabla
         document.getElementById("my_modal_3").close();
       });
@@ -109,7 +130,7 @@ export const TableAdmin = () => {
       .then((data) => {
         setData(data);
       });
-  }
+  };
   useEffect(() => {
     TraerUnidades();
     DataTabla();
@@ -134,10 +155,22 @@ export const TableAdmin = () => {
         pageLength: 5,
         dom: "Bfrtip", // Agrega 'B' para botones
         buttons: [
-          "excelHtml5", // Botón para exportar a Excel
-          "csvHtml5", // Botón para exportar a CSV
-          "pdfHtml5", // Botón para exportar a PDF
-          "print", // Botón para imprimir
+          {
+            extend: "excelHtml5",
+            className: "btn bg-green-600 text-gray-200 border-none", // Añadir clase personalizada
+          },
+          {
+            extend: "csvHtml5",
+            className: "btn bg-green-600 text-gray-200 border-none", // Añadir clase personalizada
+          },
+          {
+            extend: "pdfHtml5",
+            className: "btn bg-red-600 text-gray-200 border-none", // Añadir clase personalizada
+          },
+          {
+            extend: "print",
+            className: "btn bg-black text-gray-200 border-none", // Añadir clase personalizada
+          },
         ],
       });
     }
@@ -150,63 +183,69 @@ export const TableAdmin = () => {
           onClick={() => {
             document.getElementById("my_modal_3").showModal();
           }}
-          className="btn bg-blue-700 text-gray-50"
+          className="btn bg-blue-700 text-gray-50 border-2 border-blue-700"
         >
-          INSERTAR
+          Insertar Registro
         </button>
       </div>
-      <table id="myTable2" className="block h-full ">
-        <thead>
-          <tr>
-            <th>RUT</th>
-            <th>Nombre</th>
-            <th>Unidad</th>
-            <th>Ley</th>
-            <th>Accion</th>
-            <th>Accion</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            data.length > 0 &&
-            data.map((item, index) => (
-              <tr key={`renglon-${item.RUT}`}>
-                <td>{item.RUT}</td>
-                <td>{item.Nombre}</td>
-                <td>{item.Unidad}</td>
-                <td>{item.Ley}</td>
-                <td>
-                  <button
-                    onClick={() => {
-                      traerDatos(item.RUT);
-                      document.getElementById("my_modal_1").showModal();
-                    }}
-                    className="btn bg-blue-700 text-gray-50"
-                  >
-                    EDITAR
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      traerDatos(item.RUT);
-                      document.getElementById("my_modal_2").showModal();
-                    }}
-                    className="btn bg-red-500 text-gray-50"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      {data.length > 0 ? (
+        <table id="myTable2" className="block h-full ">
+          <thead>
+            <tr>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Unidad</th>
+              <th>Ley</th>
+              <th>Accion</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length > 0 &&
+              data.map((item, index) => (
+                <tr key={`renglon-${item.RUT}`}>
+                  <td>{item.RUT}</td>
+                  <td>{item.Nombre}</td>
+                  <td>{item.Unidad}</td>
+                  <td>{item.Ley}</td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        traerDatos(item.RUT);
+                        document.getElementById("my_modal_1").showModal();
+                      }}
+                      className="btn bg-blue-700 text-gray-50 border-2 border-blue-700"
+                    >
+                      EDITAR
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        traerDatos(item.RUT);
+                        document.getElementById("my_modal_2").showModal();
+                      }}
+                      className="btn bg-red-500 text-gray-50 border-red-500 border-2"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center">
+          <h1 className="text-xl text-gray-900">
+            No hay registros o estamos cargando tus datos
+          </h1>
+        </div>
+      )}
 
-      {/* MODAL INSERTAR */}
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">Insertar</h3>
-          <p className="py-4">Lleno los campos y presione el boton "Guardar"</p>
+          <p className="py-4">Llene los campos y presione el boton "Guardar"</p>
           <div className="modal-action block">
             <form
               method="dialog w-full"
@@ -214,7 +253,6 @@ export const TableAdmin = () => {
                 e.preventDefault();
               }}
             >
-              {/* if there is a button in form, it will close the modal */}
               <label className="form-control w-full ">
                 <div className="label">
                   <span className="label-text text-black">RUT</span>
@@ -308,7 +346,6 @@ export const TableAdmin = () => {
           </div>
         </div>
       </dialog>
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
 
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box bg-white">
@@ -404,6 +441,16 @@ export const TableAdmin = () => {
                 >
                   Guardar
                 </button>
+                {persona.Estado === 0 && (
+                  <button
+                    className="btn bg-red-700 text-gray-50 w-1/4"
+                    onClick={() => {
+                      ReactivarPersona(persona);
+                    }}
+                  >
+                    Reactivar
+                  </button>
+                )}
 
                 <button
                   className="btn border-red-500 text-red-500 bg-white w-1/4"
@@ -419,7 +466,6 @@ export const TableAdmin = () => {
         </div>
       </dialog>
 
-      {/* MODAL ELIMINAR */}
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">Eliminar</h3>

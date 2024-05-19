@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import DataTable from "datatables.net-dt";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "datatables.net-responsive-dt/css/responsive.dataTables.min.css";
@@ -18,53 +18,19 @@ pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
 export const Table = () => {
   const [data, setData] = useState([]);
-  const [persona, setPersona] = useState({});
-  const [alimento, setAlimento] = useState({});
+  const [persona, setPersona] = useState("");
+  const [alimento, setAlimento] = useState("");
   const contexto = useContext(AppContext);
-  const TablaMes = (mes) => {
-    fetch(`http://localhost:8090/api/tabla/${mes}`, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: contexto.usuario.Token,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      });
-  };
-  const Inactivos = () => {
-    fetch("http://localhost:8090/api/tabla/deleted", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: contexto.usuario.Token,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      });
-  };
-  const Activos = () => {
-    fetch("http://localhost:8090/api/tabla/active", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: contexto.usuario.Token,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      });
-  };
+  const [info, setInfo] = useState("");
+  const [dataActivos, setDataActivos] = useState([]);
+  const [dataInactivos, setDataInactivos] = useState([]);
+  const [activeTable, setActiveTable] = useState("data");
 
-  const BuscarRUT = (rut) => {
+  const tableRef = useRef(null);
+  const tableRefActivos = useRef(null);
+  const tableRefInactivos = useRef(null);
+
+  const BuscarRUT = async (rut) => {
     fetch(`http://localhost:8090/api/persona/${rut}`, {
       method: "GET",
       mode: "cors",
@@ -75,13 +41,17 @@ export const Table = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setPersona(data);
-        console.log(data);
-        document.getElementById("InsertarAlimento").showModal();
+        if (data != null) {
+          setPersona(data);
+          document.getElementById("BuscarRUT").close();
+          document.getElementById("InsertarAlimento").showModal();
+        } else {
+          setInfo("No se encontro el RUT");
+        }
       });
   };
 
-  const InsertarAlimento = (alimento) => {
+  const InsertarAlimento = async (alimento) => {
     fetch("http://localhost:8090/api/alimento", {
       method: "POST",
       mode: "cors",
@@ -94,70 +64,114 @@ export const Table = () => {
       .then((response) => response.json())
       .then((data) => {
         setAlimento(data);
-        console.log(data);
       });
   };
-
-  useEffect(() => {
-    fetch("http://localhost:8090/api/tabla", {
+  const fetchAndSetData = async (url, setDataFunction) => {
+    const response = await fetch(url, {
       method: "GET",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
         token: contexto.usuario.Token,
       },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      });
+    });
+    const result = await response.json();
+    setDataFunction(result);
+  };
 
-    // Limpiar DataTable al desmontar el componente
-    return () => {
-      if ($.fn.DataTable.isDataTable("#myTable")) {
-        $("#myTable").DataTable().destroy();
-      }
-    };
+  const TablaMes = (mes) => {
+    setActiveTable("data");
+    fetchAndSetData(`http://localhost:8090/api/tabla/${mes}`, setData);
+  };
+
+  const Inactivos = () => {
+    setActiveTable("dataInactivos");
+    fetchAndSetData("http://localhost:8090/api/tabla/deleted", setDataInactivos);
+  };
+
+  const Activos = () => {
+    setActiveTable("dataActivos");
+    fetchAndSetData("http://localhost:8090/api/tabla/active", setDataActivos);
+  };
+
+  const destroyTable = (tableId) => {
+    if ($.fn.DataTable.isDataTable(`#${tableId}`)) {
+      $(`#${tableId}`).DataTable().clear().destroy();
+    }
+  };
+
+  const initializeDataTable = (tableId, data) => {
+    $(`#${tableId}`).DataTable({
+      data: data,
+      columns: [
+        { title: "Fecha", data: "Fecha" },
+        { title: "RUT", data: "RUT" },
+        { title: "Nombre", data: "NombreCompleto" },
+        { title: "Alimentación", data: "Alimentacion" },
+        { title: "Unidad", data: "CC" },
+        { title: "Ley", data: "Ley" },
+      ],
+      paging: true,
+      searching: true,
+      responsive: true,
+      pageLength: 5,
+      dom: "Bfrtip", // Agrega 'B' para botones
+      buttons: [
+        {
+          extend: "excelHtml5",
+          className: "btn bg-green-600 text-gray-200 border-none",
+        },
+        {
+          extend: "csvHtml5",
+          className: "btn bg-green-600 text-gray-200 border-none",
+        },
+        {
+          extend: "pdfHtml5",
+          className: "btn bg-red-600 text-gray-200 border-none",
+        },
+        {
+          extend: "print",
+          className: "btn bg-black text-gray-200 border-none",
+        },
+      ],
+    });
+  };
+
+  useEffect(() => {
+    fetchAndSetData("http://localhost:8090/api/tabla", setData);
   }, []);
 
   useEffect(() => {
-    if (data.length > 0) {
-      new DataTable("#myTable", {
-        paging: true,
-        searching: true,
-        responsive: true,
-        pageLength: 5,
-        dom: "Bfrtip", // Agrega 'B' para botones
-        buttons: [
-          "excelHtml5", // Botón para exportar a Excel
-          "csvHtml5", // Botón para exportar a CSV
-          "pdfHtml5", // Botón para exportar a PDF
-          "print", // Botón para imprimir
-        ],
-      });
+    destroyTable("dataTable");
+    if (activeTable === "data") {
+      initializeDataTable("dataTable", data);
     }
-  }, [data]);
+  }, [data, activeTable]);
+
+  useEffect(() => {
+    destroyTable("dataActivosTable");
+    if (activeTable === "dataActivos") {
+      initializeDataTable("dataActivosTable", dataActivos);
+    }
+  }, [dataActivos, activeTable]);
+
+  useEffect(() => {
+    destroyTable("dataInactivosTable");
+    if (activeTable === "dataInactivos") {
+      initializeDataTable("dataInactivosTable", dataInactivos);
+    }
+  }, [dataInactivos, activeTable]);
 
   return (
-    <div className="w-3/4 m-auto ">
-      <div className="w-full flex justify-end">
-        <button
-          onClick={() => {
-            document.getElementById("BuscarRUT").showModal();
-          }}
-          className="btn bg-blue-700 text-gray-50"
-        >
-          INSERTAR
-        </button>
-      </div>
+    <div className="w-3/4 m-auto">
       <div className="flex flex-wrap w-full justify-around">
         <select
           onChange={(e) => {
             TablaMes(e.target.value);
           }}
-          className="select select-info w-full max-w-xs bg-white"
+          className="select select-info w-full max-w-xs bg-white border-black mb-20"
         >
-          <option disabled selected>
+          <option disabled selected defaultValue={1}>
             Selecciona un mes
           </option>
           <option value={1}>Enero</option>
@@ -173,55 +187,131 @@ export const Table = () => {
           <option value={11}>Noviembre</option>
           <option value={12}>Diciembre</option>
         </select>
-        <div className="form-control">
+        <div className="form-control border-2 h-12 rounded-lg">
           <label className="label cursor-pointer">
-            <span className="label-text">Inactivos</span>
-            <input
-              type="radio"
-              name="radio-10"
-              className="ml-2 radio checked:bg-red-500"
-              onChange={() => Inactivos()}
-            />
-          </label>
-        </div>
-        <div className="form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text">Activos</span>
+            <span className="label-text text-gray-800">Inactivos</span>
             <input
               type="radio"
               name="radio-10"
               className="ml-2 radio checked:bg-blue-500"
-              onChange={() => Activos()}
+              onChange={Inactivos}
             />
           </label>
         </div>
+        <div className="form-control border-2 h-12 rounded-lg">
+          <label className="label cursor-pointer">
+            <span className="label-text text-gray-800">Activos</span>
+            <input
+              type="radio"
+              name="radio-10"
+              className="ml-2 radio checked:bg-blue-500"
+              onChange={Activos}
+            />
+          </label>
+        </div>
+        <button
+          onClick={() => {
+            document.getElementById("BuscarRUT").showModal();
+          }}
+          className="btn bg-blue-700 text-gray-100 border-2 border-blue-700"
+        >
+          INSERTAR
+        </button>
       </div>
-      <table id="myTable" className="display">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>RUT</th>
-            <th>Nombre</th>
-            <th>Alimentación</th>
-            <th>Unidad</th>
-            <th>Ley</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={`renglon-${item.RUT}`}>
-              <td>{item.Fecha}</td>
-              <td>{item.RUT}</td>
-              <td>{item.NombreCompleto}</td>
-              <td>{item.Alimentacion}</td>
-              <td>{item.CC}</td>
-              <td>{item.Ley}</td>
+      {activeTable === "data" && data.length > 0 && (
+        <div className={activeTable === "data" ? "block" : "hidden"}>
+        <table id="dataTable" className="display">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Alimentación</th>
+              <th>Unidad</th>
+              <th>Ley</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={`renglon-${item.RUT}-${index}`}>
+                <td>{item.Fecha}</td>
+                <td>{item.RUT}</td>
+                <td>{item.NombreCompleto}</td>
+                <td>{item.Alimentacion}</td>
+                <td>{item.CC}</td>
+                <td>{item.Ley}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+      )}
 
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
+      {activeTable === "dataActivos" && dataActivos.length > 0 && (
+        <div className={activeTable === "dataActivos" ? "block" : "hidden"}>
+
+        <table id="dataActivosTable" className="display">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Alimentación</th>
+              <th>Unidad</th>
+              <th>Ley</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={`renglon-${item.RUT}-${index * 17}`}>
+                <td>{item.Fecha}</td>
+                <td>{item.RUT}</td>
+                <td>{item.NombreCompleto}</td>
+                <td>{item.Alimentacion}</td>
+                <td>{item.CC}</td>
+                <td>{item.Ley}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+      )}
+
+      {activeTable === "dataInactivos" && dataInactivos.length > 0 && (
+       <div className={activeTable === "dataInactivos" ? "block" : "hidden"}>
+        <table id="dataInactivosTable" className="display">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Alimentación</th>
+              <th>Unidad</th>
+              <th>Ley</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={`renglon-${item.RUT}-${index * 13}`}>
+                <td>{item.Fecha}</td>
+                <td>{item.RUT}</td>
+                <td>{item.NombreCompleto}</td>
+                <td>{item.Alimentacion}</td>
+                <td>{item.CC}</td>
+                <td>{item.Ley}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+      )}
+      {data.length === 0 &&
+        dataActivos.length === 0 &&
+        dataInactivos.length === 0 && (
+          <div className="flex justify-center items-center h-96">
+            <h1 className="text-3xl text-gray-600">No hay datos</h1>
+          </div>
+        )}
 
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box bg-white">
@@ -263,7 +353,6 @@ export const Table = () => {
               onSubmit={(e) => {
                 e.preventDefault();
                 BuscarRUT(e.target.rut.value);
-                document.getElementById("BuscarRUT").close();
               }}
             >
               <input
@@ -273,7 +362,8 @@ export const Table = () => {
                 id={"rut"}
                 className="google-input"
               />
-              <button className="btn">Buscar</button>
+              <p className="text-center block w-full text-red-600">{info}</p>
+              <button className="btn w-1/2 m-auto block">Buscar</button>
             </form>
           </div>
         </div>
@@ -294,35 +384,32 @@ export const Table = () => {
                 };
                 InsertarAlimento(alimento);
                 document.getElementById("InsertarAlimento").close();
-                
               }}
             >
               <label className="label">
-                <span className="label-text">Nombre</span>
+                <span className="label-text text-gray-600">Nombre</span>
               </label>
               <input
                 type="text"
-                placeholder="Nombre"
+                placeholder="Hugo Gaytan"
                 name="nombre"
                 id="nombre"
                 className="google-input"
                 value={persona.Nombre}
-                readOnly
               />
               <label className="label">
-                <span className="label-text">RUT</span>
+                <span className="label-text text-gray-600">RUT</span>
               </label>
               <input
                 type="text"
                 placeholder="RUT"
-                name="rut"
+                name="1060504-K"
                 id="rut"
                 className="google-input"
                 value={persona.RUT}
-                readOnly
               />
               <label className="label">
-                <span className="label-text">Alimentación</span>
+                <span className="label-text text-gray-600">Alimentación</span>
               </label>
               <select
                 name="alimentacion"
@@ -333,12 +420,23 @@ export const Table = () => {
                 <option value="ALMUERZO">ALMUERZO</option>
                 <option value="CENA">CENA</option>
               </select>
-              <button className="btn">Insertar</button>
+              <div className="w-full flex flex-wrap justify-around">
+                <button className="btn block mt-4 bg-blue-500 text-gray-200 border-blue-500 w-1/4 m-auto">
+                  Insertar
+                </button>
+                <button
+                  className="btn block mt-4 bg-white text-blue-700 border-blue-500 w-1/4 m-auto"
+                  onClick={() =>
+                    document.getElementById("InsertarAlimento").close()
+                  }
+                >
+                  Cerrar
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </dialog>
-
     </div>
   );
 };

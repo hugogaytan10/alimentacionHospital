@@ -13,3 +13,6 @@
     margin-bottom: 0.4em;
 }
 
+.dt-button > span{
+    background-color: inherit;
+}

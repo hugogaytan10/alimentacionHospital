@@ -9,7 +9,7 @@ export const AppContext = createContext({} as AppContextState);
 
 const AppProvider: React.FC<Props> = ({ children }) => {
     const [usuario, setUsuario] = useState({
-        Id: '', User: '', Contrasenia: '', Tipo: 1, Token: ''
+        Id: '', User: '', Contrasenia: '', Tipo: 0, Token: ''
     });
 
     const memoizedValue = useMemo(() => ({

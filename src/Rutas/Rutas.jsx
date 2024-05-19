@@ -4,6 +4,7 @@ import { AppContext } from "../Contexto/AppContext";
 import { Table } from "../Table/Table";
 import { TableAdmin } from "../TableAdmin/TableAdmin";
 import { Login } from "../Login/Login";
+import { NotFound } from "../NotFound/NotFound";
 
 export const Rutas = () => {
   const contexto = useContext(AppContext);
@@ -32,8 +33,15 @@ export const Rutas = () => {
         <div className="h-5/6">
             <Routes>
                 <Route path="/" element={<Login />} />
-                <Route path="/listado" element={<Table />} />
-                <Route path="/admin" element={<TableAdmin />} />
+                {
+                  contexto.usuario.Token != ''?
+                  <>
+                  <Route path="/listado" element={<Table />} />
+                  <Route path="/admin" element={<TableAdmin />} />
+                  </>
+                  :
+                  <Route path="*" element={<NotFound />} />
+                }
             </Routes>
         </div>
       </BrowserRouter>
