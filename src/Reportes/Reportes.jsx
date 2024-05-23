@@ -308,7 +308,7 @@ export const Reportes = () => {
                                     onChange={(e) => { setMes(e.target.value); }}
                                     className="select select-bordered w-full bg-white"
                                 >
-                                    <option disabled selected>Mes</option>
+                                    <option value="" selected>Mes</option>
                                     <option value="1">Enero</option>
                                     <option value="2">Febrero</option>
                                     <option value="3">Marzo</option>
@@ -330,7 +330,7 @@ export const Reportes = () => {
                                     onChange={(e) => { setAnio(e.target.value); }}
                                     className="select select-bordered w-full bg-white"
                                 >
-                                    <option disabled selected>Año</option>
+                                    <option value="" selected>Año</option>
                                     <option value="2021">2021</option>
                                     <option value="2022">2022</option>
                                     <option value="2023">2023</option>
