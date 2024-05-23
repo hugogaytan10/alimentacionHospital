@@ -349,14 +349,19 @@ export const Table = () => {
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">BUSCAR PERSONA POR RUT</h3>
           <p className="py-4">
-            Presiona ESC para cerrar
+            Presiona ESC para cerrar o haz click en el botón de abajo
           </p>
           <div className="modal-action block">
             <form
               method="dialog w-full"
               onSubmit={(e) => {
-                e.preventDefault();
-                BuscarRUT(e.target.rut.value);
+                if (e.target.rut.value === "") {
+                  e.preventDefault();
+                  setInfo("Ingrese un RUT");                  
+                } else {
+                  e.preventDefault();
+                  BuscarRUT(e.target.rut.value);
+                }
               }}
             >
               <input
