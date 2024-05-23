@@ -1,4 +1,3 @@
-/* Estilos para centrar los botones horizontalmente y aplicar estilos específicos */
 .button-container {
     display: flex;
     justify-content: center;
@@ -9,21 +8,37 @@
     font-weight: bold;
     color: #ffffff;
     background-color: #1e40af;
-    /* Cambia aquí el color de fondo */
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-
 .canvas-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 80vh;
+    position: relative;
+}
+
+.canvas-message {
+    position: absolute;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #000;
 }
 
 canvas {
     border: 1px solid #000;
+}
+
+.modal-box {
+    background-color: #ffffff;
+}
+
+.modal-action .error-message {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
 }
