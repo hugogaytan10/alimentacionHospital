@@ -139,6 +139,7 @@ export const Table = () => {
 
   useEffect(() => {
     fetchAndSetData("http://localhost:8090/api/tabla", setData);
+    document.getElementById("BuscarRUT").showModal();
   }, []);
 
   useEffect(() => {
@@ -220,89 +221,89 @@ export const Table = () => {
       </div>
       {activeTable === "data" && data.length > 0 && (
         <div className={activeTable === "data" ? "block" : "hidden"}>
-        <table id="dataTable" className="display">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>RUT</th>
-              <th>Nombre</th>
-              <th>Alimentación</th>
-              <th>Unidad</th>
-              <th>Ley</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={`renglon-${item.RUT}-${index}`}>
-                <td>{item.Fecha}</td>
-                <td>{item.RUT}</td>
-                <td>{item.NombreCompleto}</td>
-                <td>{item.Alimentacion}</td>
-                <td>{item.CC}</td>
-                <td>{item.Ley}</td>
+          <table id="dataTable" className="display">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>RUT</th>
+                <th>Nombre</th>
+                <th>Alimentación</th>
+                <th>Unidad</th>
+                <th>Ley</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={`renglon-${item.RUT}-${index}`}>
+                  <td>{item.Fecha}</td>
+                  <td>{item.RUT}</td>
+                  <td>{item.NombreCompleto}</td>
+                  <td>{item.Alimentacion}</td>
+                  <td>{item.CC}</td>
+                  <td>{item.Ley}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {activeTable === "dataActivos" && dataActivos.length > 0 && (
         <div className={activeTable === "dataActivos" ? "block" : "hidden"}>
 
-        <table id="dataActivosTable" className="display">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>RUT</th>
-              <th>Nombre</th>
-              <th>Alimentación</th>
-              <th>Unidad</th>
-              <th>Ley</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={`renglon-${item.RUT}-${index * 17}`}>
-                <td>{item.Fecha}</td>
-                <td>{item.RUT}</td>
-                <td>{item.NombreCompleto}</td>
-                <td>{item.Alimentacion}</td>
-                <td>{item.CC}</td>
-                <td>{item.Ley}</td>
+          <table id="dataActivosTable" className="display">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>RUT</th>
+                <th>Nombre</th>
+                <th>Alimentación</th>
+                <th>Unidad</th>
+                <th>Ley</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={`renglon-${item.RUT}-${index * 17}`}>
+                  <td>{item.Fecha}</td>
+                  <td>{item.RUT}</td>
+                  <td>{item.NombreCompleto}</td>
+                  <td>{item.Alimentacion}</td>
+                  <td>{item.CC}</td>
+                  <td>{item.Ley}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {activeTable === "dataInactivos" && dataInactivos.length > 0 && (
-       <div className={activeTable === "dataInactivos" ? "block" : "hidden"}>
-        <table id="dataInactivosTable" className="display">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>RUT</th>
-              <th>Nombre</th>
-              <th>Alimentación</th>
-              <th>Unidad</th>
-              <th>Ley</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={`renglon-${item.RUT}-${index * 13}`}>
-                <td>{item.Fecha}</td>
-                <td>{item.RUT}</td>
-                <td>{item.NombreCompleto}</td>
-                <td>{item.Alimentacion}</td>
-                <td>{item.CC}</td>
-                <td>{item.Ley}</td>
+        <div className={activeTable === "dataInactivos" ? "block" : "hidden"}>
+          <table id="dataInactivosTable" className="display">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>RUT</th>
+                <th>Nombre</th>
+                <th>Alimentación</th>
+                <th>Unidad</th>
+                <th>Ley</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={`renglon-${item.RUT}-${index * 13}`}>
+                  <td>{item.Fecha}</td>
+                  <td>{item.RUT}</td>
+                  <td>{item.NombreCompleto}</td>
+                  <td>{item.Alimentacion}</td>
+                  <td>{item.CC}</td>
+                  <td>{item.Ley}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
       {data.length === 0 &&
@@ -347,6 +348,9 @@ export const Table = () => {
       <dialog id="BuscarRUT" className="modal">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">BUSCAR PERSONA POR RUT</h3>
+          <p className="py-4">
+            Presiona ESC para cerrar
+          </p>
           <div className="modal-action block">
             <form
               method="dialog w-full"
