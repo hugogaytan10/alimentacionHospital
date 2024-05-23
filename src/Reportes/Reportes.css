@@ -1,0 +1,29 @@
+/* Estilos para centrar los botones horizontalmente y aplicar estilos específicos */
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.button-container button {
+    margin: 0 5px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #1e40af;
+    /* Cambia aquí el color de fondo */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+canvas {
+    border: 1px solid #000;
+}

@@ -5,6 +5,7 @@ import { Table } from "../Table/Table";
 import { TableAdmin } from "../TableAdmin/TableAdmin";
 import { Login } from "../Login/Login";
 import { NotFound } from "../NotFound/NotFound";
+import { Reportes } from "../Reportes/Reportes";
 
 export const Rutas = () => {
   const contexto = useContext(AppContext);
@@ -27,22 +28,29 @@ export const Rutas = () => {
               >
                 ABD
               </NavLink>
+              <NavLink
+                className="font-bold text-gray-50 w-20 text-center bg-blue-800 rounded-md"
+                to="/reportes"
+              >
+                REPORTE
+              </NavLink>
             </ul>
           </nav>
         )}
         <div className="h-5/6">
-            <Routes>
-                <Route path="/" element={<Login />} />
-                {
-                  contexto.usuario.Token != ''?
-                  <>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            {
+              contexto.usuario.Token != '' ?
+                <>
                   <Route path="/listado" element={<Table />} />
                   <Route path="/admin" element={<TableAdmin />} />
-                  </>
-                  :
-                  <Route path="*" element={<NotFound />} />
-                }
-            </Routes>
+                  <Route path="/reportes" element={<Reportes />} />
+                </>
+                :
+                <Route path="*" element={<NotFound />} />
+            }
+          </Routes>
         </div>
       </BrowserRouter>
     </div>
