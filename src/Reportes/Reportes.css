@@ -43,22 +43,44 @@ canvas {
     text-align: center;
 }
 
+
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(0.8);
     border-radius: 4px;
     padding: 2px;
 }
 
+input[type="date"]::-moz-focus-inner {
+    border: 0;
+}
+
 input[type="date"]::-ms-clear {
     display: none;
 }
 
+input[type="date"]::-ms-expand {
+    filter: invert(0.8);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+/* Para campos de hora */
 input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(0.8);
     border-radius: 4px;
     padding: 2px;
 }
 
+input[type="time"]::-moz-focus-inner {
+    border: 0;
+}
+
 input[type="time"]::-ms-clear {
     display: none;
+}
+
+input[type="time"]::-ms-expand {
+    filter: invert(0.8);
+    border-radius: 4px;
+    padding: 2px;
 }
