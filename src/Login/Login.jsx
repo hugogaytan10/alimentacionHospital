@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexto/AppContext';
+
 export const Login = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
