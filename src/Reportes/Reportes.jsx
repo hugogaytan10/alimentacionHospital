@@ -186,7 +186,7 @@ export const Reportes = () => {
                     <h3 className="font-bold text-lg">Seleccione Hora de Inicio y Fin</h3>
                     <p className="py-4">Seleccione una hora de inicio y una hora de fin</p>
                     <div className="modal-action block">
-                        <form method="dialog w-full" onSubmit={(e) => { e.preventDefault(); }}>
+                        <form method="dialog" className="w-full" onSubmit={(e) => { e.preventDefault(); }}>
                             <label className="form-control w-full">
                                 <div className="label">
                                     <span className="label-text text-black">Hora de Inicio</span>
@@ -212,6 +212,7 @@ export const Reportes = () => {
                             {error && <div className="error-message">{error}</div>}
                             <div className="w-full flex flex-wrap justify-around mt-4">
                                 <button
+                                    type="button"
                                     className="btn bg-blue-700 text-gray-50 w-1/4"
                                     onClick={() => {
                                         if (horaInicio === '' || horaFin === '') {
@@ -224,6 +225,7 @@ export const Reportes = () => {
                                     Obtener
                                 </button>
                                 <button
+                                    type="button"
                                     className="btn border-red-500 text-red-500 bg-white w-1/4"
                                     onClick={() => {
                                         document.getElementById("my_modal_1").close();
@@ -237,12 +239,13 @@ export const Reportes = () => {
                     </div>
                 </div>
             </dialog>
+
             <dialog id="my_modal_2" className="modal">
                 <div className="modal-box bg-white">
                     <h3 className="font-bold text-lg">Seleccione Fecha de Inicio y Fin</h3>
                     <p className="py-4">Seleccione una fecha de inicio y una fecha de fin</p>
                     <div className="modal-action block">
-                        <form method="dialog w-full" onSubmit={(e) => { e.preventDefault(); }}>
+                        <form method="dialog" className="w-full" onSubmit={(e) => { e.preventDefault(); }}>
                             <label className="form-control w-full">
                                 <div className="label">
                                     <span className="label-text text-black">Fecha de Inicio</span>
@@ -268,6 +271,7 @@ export const Reportes = () => {
                             {error && <div className="error-message">{error}</div>}
                             <div className="w-full flex flex-wrap justify-around mt-4">
                                 <button
+                                    type="button"
                                     className="btn bg-blue-700 text-gray-50 w-1/4"
                                     onClick={() => {
                                         if (fechaInicio === '' || fechaFin === '') {
@@ -280,6 +284,7 @@ export const Reportes = () => {
                                     Obtener
                                 </button>
                                 <button
+                                    type="button"
                                     className="btn border-red-500 text-red-500 bg-white w-1/4"
                                     onClick={() => {
                                         document.getElementById("my_modal_2").close();
@@ -293,6 +298,7 @@ export const Reportes = () => {
                     </div>
                 </div>
             </dialog>
+
             <dialog id="my_modal_3" className="modal">
                 <div className="modal-box bg-white">
                     <h3 className="font-bold text-lg">Graficos por mes</h3>

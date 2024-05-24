@@ -42,3 +42,23 @@ canvas {
     margin-top: 10px;
     text-align: center;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+input[type="date"]::-ms-clear {
+    display: none;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+input[type="time"]::-ms-clear {
+    display: none;
+}
