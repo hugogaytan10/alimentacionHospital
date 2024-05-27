@@ -10,7 +10,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('http://localhost:8090/api/login', {
+        fetch('https://becontrolvale-production.up.railway.app/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

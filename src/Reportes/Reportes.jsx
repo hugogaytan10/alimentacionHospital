@@ -48,7 +48,7 @@ export const Reportes = () => {
     };
 
     const reportehoy = () => {
-        fetch('http://localhost:8090/api/reporte/hoy', {
+        fetch('https://becontrolvale-production.up.railway.app/api/reporte/hoy', {
             method: 'GET',
             mode: "cors",
             headers: {
@@ -71,7 +71,7 @@ export const Reportes = () => {
             return;
         }
 
-        fetch(`http://localhost:8090/api/reporte/horas/${horaInicio}/${horaFin}`, {
+        fetch(`https://becontrolvale-production.up.railway.app/api/reporte/horas/${horaInicio}/${horaFin}`, {
             method: 'GET',
             mode: "cors",
             headers: {
@@ -98,7 +98,7 @@ export const Reportes = () => {
             return;
         }
 
-        fetch(`http://localhost:8090/api/reporte/dias/${fechaInicio}/${fechaFin}`, {
+        fetch(`https://becontrolvale-production.up.railway.app/api/reporte/dias/${fechaInicio}/${fechaFin}`, {
             method: 'GET',
             mode: "cors",
             headers: {
@@ -125,7 +125,7 @@ export const Reportes = () => {
             return;
         }
 
-        fetch(`http://localhost:8090/api/reporte/mes/${mes}/${anio}`, {
+        fetch(`https://becontrolvale-production.up.railway.app/api/reporte/mes/${mes}/${anio}`, {
             method: 'GET',
             mode: "cors",
             headers: {

@@ -21,7 +21,7 @@ export const TableAdmin = () => {
   const [persona, setPersona] = useState({});
   const contexto = useContext(AppContext);
   const traerDatos = async (id) => {
-    fetch(`http://localhost:8090/api/persona/${id}`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona/${id}`, {
       method: "GET",
       mode: "cors",
       headers: {
@@ -35,7 +35,7 @@ export const TableAdmin = () => {
       });
   };
   const TraerUnidades = async () => {
-    fetch(`http://localhost:8090/api/unidad`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/unidad`, {
       method: "GET",
       mode: "cors",
       headers: {
@@ -49,7 +49,7 @@ export const TableAdmin = () => {
       });
   };
   const ActualizarPersona = async (persona) => {
-    fetch(`http://localhost:8090/api/persona/${persona.RUT}`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona/${persona.RUT}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -72,7 +72,7 @@ export const TableAdmin = () => {
       Unidad_Id: persona.Unidad_Id,
       Ley: persona.Ley,
     };
-    fetch(`http://localhost:8090/api/persona/${persona.RUT}`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona/${persona.RUT}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -87,7 +87,7 @@ export const TableAdmin = () => {
       });
   };
   const EliminarPersona = async (id) => {
-    fetch(`http://localhost:8090/api/persona/eliminar/${id}`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona/eliminar/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -101,7 +101,7 @@ export const TableAdmin = () => {
       });
   };
   const GuardarPersona = async (persona) => {
-    fetch(`http://localhost:8090/api/persona`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -118,7 +118,7 @@ export const TableAdmin = () => {
       });
   };
   const DataTabla = () => {
-    fetch("http://localhost:8090/api/personaUnidad", {
+    fetch("https://becontrolvale-production.up.railway.app/api/personaUnidad", {
       method: "GET",
       mode: "cors",
       headers: {
