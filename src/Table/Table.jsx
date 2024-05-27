@@ -29,7 +29,7 @@ export const Table = () => {
   const tableRefInactivos = useRef(null);
 
   const BuscarRUT = async (rut) => {
-    fetch(`http://localhost:8090/api/persona/${rut}`, {
+    fetch(`https://becontrolvale-production.up.railway.app/api/persona/${rut}`, {
       method: "GET",
       mode: "cors",
       headers: {
@@ -50,7 +50,7 @@ export const Table = () => {
   };
 
   const InsertarAlimento = async (alimento) => {
-    fetch("http://localhost:8090/api/alimento", {
+    fetch("https://becontrolvale-production.up.railway.app/api/alimento", {
       method: "POST",
       mode: "cors",
       headers: {
