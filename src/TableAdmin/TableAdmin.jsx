@@ -9,11 +9,8 @@ import "datatables.net-buttons";
 // @ts-ignore
 import "datatables.net-buttons/js/buttons.html5.js";
 import "datatables.net-buttons/js/buttons.print.js";
-import jszip from "jszip";
-import pdfMake from "pdfmake/build/pdfmake";
-import vfsFonts from "pdfmake/build/vfs_fonts";
+
 import { AppContext } from "../Contexto/AppContext";
-pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
 export const TableAdmin = () => {
   const [data, setData] = useState([]);
