@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexto/AppContext';
+
 export const Login = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
@@ -9,7 +10,7 @@ export const Login = () => {
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('http://localhost:8090/api/login', {
+        fetch('https://becontrolvale-production.up.railway.app/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

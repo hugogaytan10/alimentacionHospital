@@ -86,12 +86,12 @@ export const Table = () => {
 
   const Inactivos = () => {
     setActiveTable("dataInactivos");
-    fetchAndSetData("http://localhost:8090/api/tabla/deleted", setDataInactivos);
+    fetchAndSetData("https://becontrolvale-production.up.railway.app/api/tabla/deleted", setDataInactivos);
   };
 
   const Activos = () => {
     setActiveTable("dataActivos");
-    fetchAndSetData("http://localhost:8090/api/tabla/active", setDataActivos);
+    fetchAndSetData("https://becontrolvale-production.up.railway.app/api/tabla/active", setDataActivos);
   };
 
   const destroyTable = (tableId) => {
@@ -138,7 +138,7 @@ export const Table = () => {
   };
 
   useEffect(() => {
-    fetchAndSetData("http://localhost:8090/api/tabla", setData);
+    fetchAndSetData("https://becontrolvale-production.up.railway.app/api/tabla", setData);
     document.getElementById("BuscarRUT").showModal();
   }, []);
 
