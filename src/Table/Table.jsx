@@ -149,14 +149,14 @@ export const Table = () => {
 
   useEffect(() => {
     destroyTable("dataActivosTable");
-    if (activeTable === "dataActivos") {
+    if (activeTable === "dataActivos" && dataActivos.length > 0) {
       initializeDataTable("dataActivosTable", dataActivos);
     }
   }, [dataActivos, activeTable]);
 
   useEffect(() => {
     destroyTable("dataInactivosTable");
-    if (activeTable === "dataInactivos") {
+    if (activeTable === "dataInactivos" && dataInactivos.length > 0) {
       initializeDataTable("dataInactivosTable", dataInactivos);
     }
   }, [dataInactivos, activeTable]);
