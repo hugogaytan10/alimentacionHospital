@@ -79,7 +79,7 @@ export const Table = () => {
 
   const TablaMes = (mes) => {
     setActiveTable("data");
-    fetchAndSetData(`http://localhost:8090/api/tabla/${mes}`, setData);
+    fetchAndSetData(`https://becontrolvale-production.up.railway.app/api/tabla/${mes}`, setData);
   };
 
   const Inactivos = () => {
