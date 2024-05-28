@@ -13,3 +13,39 @@
     margin-bottom: 0.4em;
 }
 
+/* Table.css */
+.table-container {
+    width: 75%;
+    margin: auto;
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .select-container {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .select {
+    padding: 8px;
+    margin-right: 10px;
+  }
+  
