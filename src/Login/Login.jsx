@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexto/AppContext';
-
+import logoHospital from '../assets/logoHospital.jpg';
 export const Login = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
@@ -40,6 +40,9 @@ export const Login = () => {
                     <span>Credenciales incorrectas</span>
                 </div>
             </div>
+
+            <img src={logoHospital} alt="Logo Hospital" className="absolute h-20 w-20 object-contain top-10 rounded-xl" />
+
             <form onSubmit={handleSubmit} className="login-form">
                 <h2>Iniciar Sesión</h2>
                 <div className="input-group">

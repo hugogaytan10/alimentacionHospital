@@ -6,16 +6,39 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "./Table.css";
-
+import logoPath from "../assets/logoHospital.jpg";
+import { filter } from "jszip";
 export const Table = () => {
   const contexto = useContext(AppContext);
   const [persona, setPersona] = useState("");
   const [alimento, setAlimento] = useState("");
   const [info, setInfo] = useState("");
+  const [filterInput, setFilterInput] = useState("");
+  const [rutFilter, setRutFilter] = useState("");
+  const [dataMonth, setDataMonth] = useState([]);
 
   const [data, setData] = useState([]);
   const [activeTable, setActiveTable] = useState(1);
   const [indexPage, setIndexPage] = useState(1);
+
+  const filterData = () => {
+    let filteredData = [...dataMonth];
+  
+    if (filterInput) {
+      filteredData = filteredData.filter(item => 
+        item.NombreCompleto.toLowerCase().includes(filterInput.toLowerCase())
+      );
+    }
+  
+    if (rutFilter) {
+      filteredData = filteredData.filter(item =>
+        item.RUT.startsWith(rutFilter)
+      );
+    }
+  
+    setData(filteredData);
+  };
+  
 
   const BuscarRUT = async (rut) => {
     fetch(
@@ -56,8 +79,24 @@ export const Table = () => {
         setAlimento(data);
       });
   };
+  const fetchDataMonth = async (month) => {
+    const url = `https://becontrolvale-production.up.railway.app/api/tabla/all/${month}`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: contexto.usuario.Token,
+        },
+      });
+      const jsonData = await response.json();
+      setDataMonth(jsonData);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      setDataMonth([]);
+    }
+  };
   const fetchData = async (tableType, pageIndex) => {
-    console.log("fetching data", tableType, pageIndex);
     const url = `https://becontrolvale-production.up.railway.app/api/tabla/month/${tableType}/${pageIndex}`;
     try {
       const response = await fetch(url, {
@@ -80,8 +119,13 @@ export const Table = () => {
   useEffect(() => {
     if (indexPage !== 0) {
       fetchData(activeTable, indexPage);
+      fetchDataMonth(activeTable);
     }
   }, [activeTable, indexPage]);
+
+  useEffect(() => {
+    filterData();
+  }, [filterInput, rutFilter, dataMonth]);
 
   const columns = useMemo(
     () => [
@@ -126,16 +170,15 @@ export const Table = () => {
         : true;
     });
   }
-  const [filterInput, setFilterInput] = useState("");
-  const [rutFilter, setRutFilter] = useState("");
+
   const handleFilterChange = (e) => {
     const value = e.target.value || undefined;
-    setFilter("NombreCompleto", value);
+    //setFilter("NombreCompleto", value);
     setFilterInput(value);
   };
   const handleFilterRutChange = (e) => {
     const value = e.target.value || undefined;
-    setFilter("RUT", value);
+    //setFilter("RUT", value);
     setRutFilter(value);
   };
   const nextPage = () => {
@@ -162,22 +205,49 @@ export const Table = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
   };
-
-  const exportToPDF = (data, fileName) => {
-    const doc = new jsPDF();
-    autoTable(doc, {
-      head: [["Fecha", "RUT", "Nombre", "Alimentación", "Unidad", "Ley"]],
-      body: data.map((row) => [
-        row.Fecha,
-        row.RUT,
-        row.NombreCompleto,
-        row.Alimentacion,
-        row.CC,
-        row.Ley,
-      ]),
+  const convertToBase64 = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
     });
-    doc.save(`${fileName}.pdf`);
   };
+  
+  const exportToPDF = async (data, fileName) => {
+    try {
+      const image = await convertToBase64(logoPath);
+      const doc = new jsPDF();
+  
+      autoTable(doc, {
+        didDrawPage: function (data) {
+          if (data.pageNumber === 1 || data.cursor.y >= 15 + 10) {
+            doc.addImage(image, 'JPEG', data.settings.margin.left, 10, 30, 15);
+          }
+        },
+        margin: { top: 40 },
+        head: [["Fecha", "RUT", "Nombre", "Alimentación", "Unidad", "Ley"]],
+        body: data.map((row) => [
+          row.Fecha,
+          row.RUT,
+          row.NombreCompleto,
+          row.Alimentacion,
+          row.CC,
+          row.Ley,
+        ]),
+        theme: 'grid'
+      });
+  
+      doc.save(`${fileName}.pdf`);
+    } catch (error) {
+      console.error('Failed to load or convert image:', error);
+    }
+  };
+  
 
   return (
     <div className="table-container">
@@ -230,19 +300,19 @@ export const Table = () => {
 
       <div className="flex justify-end gap-2 mt-2">
         <button
-          onClick={() => exportToCSV(data, "Alimentacion_hospital")}
+          onClick={() => exportToCSV(dataMonth, "Alimentacion_hospital")}
           className="bg-green-500 px-2 py-2 rounded-lg text-gray-100"
         >
           Exportar a CSV
         </button>
         <button
-          onClick={() => exportToExcel(data, "Alimentacion_hospital")}
+          onClick={() => exportToExcel(dataMonth, "Alimentacion_hospital")}
           className="bg-green-500 px-2 py-2 rounded-lg text-gray-100"
         >
           Exportar a Excel
         </button>
         <button
-          onClick={() => exportToPDF(data, "Alimentacion_hospital")}
+          onClick={() => exportToPDF(dataMonth, "Alimentacion_hospital")}
           className="bg-red-500 text-gray-100 rounded-lg px-2 py-2"
         >
           Exportar a PDF
