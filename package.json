@@ -17,11 +17,17 @@
     "datatables.net-dt": "^1.13.8",
     "datatables.net-responsive": "^2.5.0",
     "datatables.net-responsive-dt": "^2.5.0",
+    "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "jszip": "^3.10.1",
+    "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0"
+    "react-router-dom": "^6.22.0",
+    "react-table": "^7.8.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/datatables.net-buttons": "^1.4.10",
