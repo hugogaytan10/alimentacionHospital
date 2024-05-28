@@ -125,7 +125,7 @@ export const Table = () => {
 
   useEffect(() => {
     filterData();
-  }, [filterInput, rutFilter, dataMonth]);
+  }, [filterInput, rutFilter]);
 
   const columns = useMemo(
     () => [
@@ -425,8 +425,9 @@ export const Table = () => {
                 placeholder="Hugo Gaytan"
                 name="nombre"
                 id="nombre"
-                className="google-input"
+                className="google-input bg-gray-300"
                 value={persona.Nombre}
+                readOnly 
               />
               <label className="label">
                 <span className="label-text text-gray-600">RUT</span>
@@ -436,8 +437,9 @@ export const Table = () => {
                 placeholder="RUT"
                 name="1060504-K"
                 id="rut"
-                className="google-input"
+                className="google-input bg-gray-300"
                 value={persona.RUT}
+                readOnly 
               />
               <label className="label">
                 <span className="label-text text-gray-600">Alimentación</span>
