@@ -18,14 +18,17 @@ export const Table = () => {
   const [indexPage, setIndexPage] = useState(1);
 
   const BuscarRUT = async (rut) => {
-    fetch(`https://becontrolvale-production.up.railway.app/api/persona/${rut}`, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: contexto.usuario.Token,
-      },
-    })
+    fetch(
+      `https://becontrolvale-production.up.railway.app/api/persona/${rut}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          token: contexto.usuario.Token,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data != null) {
@@ -201,16 +204,15 @@ export const Table = () => {
         </select>
 
         <button
-        onClick={() => {
-          document.getElementById("BuscarRUT").showModal();
-        }}
-        className="btn bg-blue-700 text-gray-100 border-2 border-blue-700"
-      >
-        INSERTAR
-      </button>
+          onClick={() => {
+            document.getElementById("BuscarRUT").showModal();
+          }}
+          className="btn bg-blue-700 text-gray-100 border-2 border-blue-700"
+        >
+          INSERTAR
+        </button>
       </div>
 
-      
       <div className="flex flex-wrap justify-end gap-2">
         <input
           value={filterInput}
@@ -287,27 +289,19 @@ export const Table = () => {
           Siguiente
         </button>
       </div>
-      <div className="flex justify-end text-gray-600">
-        Página {indexPage}
-      </div>
-
-
-
-
+      <div className="flex justify-end text-gray-600">Página {indexPage}</div>
 
       <dialog id="BuscarRUT" className="modal">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">BUSCAR PERSONA POR RUT</h3>
-          <p className="py-4">
-            Presiona ESC para cerrar
-          </p>
+          <p className="py-4">Presiona ESC para cerrar</p>
           <div className="modal-action block">
             <form
               method="dialog w-full"
               onSubmit={(e) => {
                 if (e.target.rut.value === "") {
                   e.preventDefault();
-                  setInfo("Ingrese un RUT");                  
+                  setInfo("Ingrese un RUT");
                 } else {
                   e.preventDefault();
                   BuscarRUT(e.target.rut.value);
@@ -322,7 +316,15 @@ export const Table = () => {
                 className="google-input"
               />
               <p className="text-center block w-full text-red-600">{info}</p>
-              <button className="btn w-1/2 m-auto block">Buscar</button>
+              <div className="flex flex-wrap w-full gap-2">
+                <button className="btn w-1/4 m-auto block bg-blue-500 text-gray-100 border-blue-500">Buscar</button>
+                <button
+                  className="btn w-1/4 m-auto block bg-white text-blue-700 border-blue-500"
+                  onClick={() => document.getElementById("BuscarRUT").close()}
+                >
+                  Cerrar
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -396,9 +398,6 @@ export const Table = () => {
           </div>
         </div>
       </dialog>
-
-
-
     </div>
   );
 };
