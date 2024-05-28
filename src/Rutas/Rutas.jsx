@@ -34,6 +34,16 @@ export const Rutas = () => {
               >
                 REPORTE
               </NavLink>
+              <li>
+                <button
+                  onClick={() => {
+                    contexto.setUsuario({ Token: "", Tipo: 0 });
+                  }}
+                  className="font-bold text-gray-50 w-20 text-center bg-blue-800 rounded-md"
+                >
+                  SALIR
+                </button>
+              </li>
             </ul>
           </nav>
         )}
