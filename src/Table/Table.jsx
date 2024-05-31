@@ -23,22 +23,22 @@ export const Table = () => {
 
   const filterData = () => {
     let filteredData = [...dataMonth];
-  
+
     if (filterInput) {
-      filteredData = filteredData.filter(item => 
+      filteredData = filteredData.filter(item =>
         item.NombreCompleto.toLowerCase().includes(filterInput.toLowerCase())
       );
     }
-  
+
     if (rutFilter) {
       filteredData = filteredData.filter(item =>
         item.RUT.startsWith(rutFilter)
       );
     }
-  
+
     setData(filteredData);
   };
-  
+
 
   const BuscarRUT = async (rut) => {
     fetch(
@@ -217,12 +217,12 @@ export const Table = () => {
       reader.readAsDataURL(blob);
     });
   };
-  
+
   const exportToPDF = async (data, fileName) => {
     try {
       const image = await convertToBase64(logoPath);
       const doc = new jsPDF();
-  
+
       autoTable(doc, {
         didDrawPage: function (data) {
           if (data.pageNumber === 1 || data.cursor.y >= 15 + 10) {
@@ -241,13 +241,13 @@ export const Table = () => {
         ]),
         theme: 'grid'
       });
-  
+
       doc.save(`${fileName}.pdf`);
     } catch (error) {
       console.error('Failed to load or convert image:', error);
     }
   };
-  
+
 
   return (
     <div className="table-container">
@@ -345,9 +345,8 @@ export const Table = () => {
       <div className="flex justify-end gap-2 mt-2">
         <button
           onClick={() => previousPage()}
-          className={`px-2 py-1 text-white font-semibold rounded-lg ${
-            indexPage > 0 ? "bg-blue-800 hover:bg-blue-700" : "bg-gray-400"
-          }`}
+          className={`px-2 py-1 text-white font-semibold rounded-lg ${indexPage > 0 ? "bg-blue-800 hover:bg-blue-700" : "bg-gray-400"
+            }`}
         >
           Anterior
         </button>
@@ -412,6 +411,7 @@ export const Table = () => {
                   Persona_RUT: e.target.rut.value,
                   Alimentacion: e.target.alimentacion.value,
                   Usuario_Id: contexto.usuario.Id,
+                  Fecha: e.target.fecha.value + " " + e.target.hora.value,
                 };
                 InsertarAlimento(alimento);
                 document.getElementById("InsertarAlimento").close();
@@ -427,7 +427,7 @@ export const Table = () => {
                 id="nombre"
                 className="google-input bg-gray-300"
                 value={persona.Nombre}
-                readOnly 
+                readOnly
               />
               <label className="label">
                 <span className="label-text text-gray-600">RUT</span>
@@ -439,7 +439,7 @@ export const Table = () => {
                 id="rut"
                 className="google-input bg-gray-300"
                 value={persona.RUT}
-                readOnly 
+                readOnly
               />
               <label className="label">
                 <span className="label-text text-gray-600">Alimentación</span>
@@ -453,6 +453,24 @@ export const Table = () => {
                 <option value="ALMUERZO">ALMUERZO</option>
                 <option value="CENA">CENA</option>
               </select>
+              <label className="label">
+                <span className="label-text text-gray-600">Fecha</span>
+              </label>
+              <input
+                type="date"
+                name="fecha"
+                id="fecha"
+                className="google-input bg-gray-300"
+              />
+              <label className="label">
+                <span className="label-text text-gray-600">Hora</span>
+              </label>
+              <input
+                type="time"
+                name="hora"
+                id="hora"
+                className="google-input bg-gray-300"
+              />
               <div className="w-full flex flex-wrap justify-around">
                 <button className="btn block mt-4 bg-blue-500 text-gray-200 border-blue-500 w-1/4 m-auto">
                   Insertar
